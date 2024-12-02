@@ -1,6 +1,6 @@
 # Oi... Meu nome é João Marcos :slightly_smiling_face:
 
-- ⌚ Tenho 20 anos
+- ⌚ Tenho 21 anos
 - 💻 Sou desenvolvedor.
 - 🎮 Gosto de jogar jogos de estratégia e simulação.
 - 💰 Meu objetivo é ter independência financeira.
