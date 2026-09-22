@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="48" viewBox="0 0 520 48" role="img" aria-labelledby="title">
+  <title id="title">Desenvolvimento web e mobile · Integrações e automações</title>
+  <style>
+    text { font: 19px Consolas, monospace; fill: #1769aa; text-anchor: middle; }
+    .second { opacity: 0; animation: second 10s infinite; }
+    .first { animation: first 10s infinite; }
+    @keyframes first { 0%,40%,100% { opacity: 1; } 48%,92% { opacity: 0; } }
+    @keyframes second { 0%,42%,94%,100% { opacity: 0; } 50%,86% { opacity: 1; } }
+    @media (prefers-color-scheme: dark) { text { fill: #79b8ff; } }
+    @media (prefers-reduced-motion: reduce) { .first { animation: none; } .second { display: none; } }
+  </style>
+  <text class="first" x="260" y="29">Desenvolvimento web e mobile</text>
+  <text class="second" x="260" y="29">Integrações e automações</text>
+</svg>

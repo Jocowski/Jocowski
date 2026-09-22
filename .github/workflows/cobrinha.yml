@@ -1,26 +1,61 @@
-name: Generate Datas
+name: Atualizar atividade do perfil
 
 on:
-  schedule: # execute every 12 hours
-    - cron: "* */12 * * *"
+  schedule:
+    - cron: "0 */12 * * *"
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/cobrinha.yml"
+      - "scripts/profile_cards.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-activity
+  cancel-in-progress: false
 
 jobs:
-  build:
-    name: Jobs to update datas
+  update:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      # Snake Animation
-      - uses: Platane/snk@master
-        id: snake-gif
-        with:
-          github_user_name: jocowski
-          svg_out_path: dist/github-contribution-grid-snake.svg
+      - uses: actions/checkout@v4
 
-      - uses: crazy-max/ghaction-github-pages@v2.1.3
+      - name: Gerar cards com dados públicos
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/profile_cards.py --username "${{ github.repository_owner }}" --output assets
+
+      - name: Gerar cobrinha nos temas claro e escuro
+        uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/github-contribution-grid-snake.svg?color_snake=%231769aa&color_dots=%23ebedf0,%23c6e3ff,%238ec5ff,%234a9be8,%231769aa
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark&color_snake=%2379b8ff&color_dots=%23161b22,%23132f4c,%231d4f7c,%232e79b8,%2379b8ff
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Salvar cards e animações atualizados
+        run: |
+          cp dist/*.svg assets/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/stats*.svg assets/languages*.svg assets/github-contribution-grid-snake*.svg
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualiza atividade pública do perfil"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - name: Publicar animações
+        uses: crazy-max/ghaction-github-pages@v5
         with:
           target_branch: output
           build_dir: dist
+          keep_history: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
